@@ -7,6 +7,7 @@
         <entry key="app/src/main/res/drawable/gradient_bg.xml" value="0.2109375" />
         <entry key="app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.2109375" />
         <entry key="app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.28541666666666665" />
+        <entry key="app/src/main/res/layout/activity_create_edit.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.16" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.14" />
         <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.11231884057971014" />
