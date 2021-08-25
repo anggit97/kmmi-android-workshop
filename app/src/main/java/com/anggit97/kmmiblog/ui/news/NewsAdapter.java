@@ -46,7 +46,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.PostViewHolder
             tvTitle.setText(post.getTitle());
             tvBody.setText(post.getBody());
             tvDate.setText(post.getCreatedAt());
-            new BlogServiceGenerator();
             Glide.with(itemView.getContext())
                     .load(post.getThumbnailUrl().replace("localhost", BlogServiceGenerator.IP))
                     .into(ivThumbnail);

@@ -1,5 +1,6 @@
 package com.anggit97.kmmiblog.ui.news;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.anggit97.kmmiblog.R;
 import com.anggit97.kmmiblog.api.BlogClient;
 import com.anggit97.kmmiblog.api.BlogServiceGenerator;
 import com.anggit97.kmmiblog.api.model.PostList;
+import com.anggit97.kmmiblog.ui.createedit.CreateEditActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import retrofit2.Call;
@@ -63,6 +65,14 @@ public class NewsFragment extends Fragment {
             public void onRefresh() {
                 fetchData();
                 swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        fabCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), CreateEditActivity.class);
+                startActivity(intent);
             }
         });
     }
