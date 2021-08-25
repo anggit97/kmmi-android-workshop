@@ -54,6 +54,17 @@ public class NewsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initRecyclerview();
         fetchData();
+        initSwipeRefresh();
+    }
+
+    private void initSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchData();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     private void fetchData() {

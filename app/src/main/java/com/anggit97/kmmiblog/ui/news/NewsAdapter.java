@@ -26,6 +26,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.PostViewHolder
     private final List<Post> postList = new ArrayList<>();
 
     void setPostList(List<Post> postList) {
+        this.postList.clear();
         this.postList.addAll(postList);
         this.notifyDataSetChanged();
     }
