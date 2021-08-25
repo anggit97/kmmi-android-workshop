@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anggit97.kmmiblog.R;
+import com.anggit97.kmmiblog.api.model.Post;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,7 @@ public class HomeFragment extends Fragment {
             Post post = new Post();
             post.setId(i);
             post.setTitle("Judul Post ke "+i);
-            post.setDate("19 September 2021");
+            post.setCreatedAt("19 September 2021");
             post.setThumbnailUrl("https://blog.hacktiv8.com/content/images/size/w2000/2017/02/coding-screen.jpeg");
             postList.add(post);
         }
