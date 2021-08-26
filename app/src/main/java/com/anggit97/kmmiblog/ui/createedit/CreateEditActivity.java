@@ -1,5 +1,6 @@
 package com.anggit97.kmmiblog.ui.createedit;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -40,6 +41,7 @@ public class CreateEditActivity extends AppCompatActivity {
 
     private ImageView ivAddPhoto;
     private ImageView ivThumbnailNews;
+    private ImageView ivBack;
     private TextInputEditText inputTitle;
     private TextInputEditText inputBody;
     private ProgressBar pbLoading;
@@ -47,6 +49,7 @@ public class CreateEditActivity extends AppCompatActivity {
 
     public static String POST_KEY = "POST_KEY";
     private static final int PICK_IMAGE = 100;
+    public static String RESULT_CREATE_UPDATE_SUCCESS_KEY = "result_create_update_success_key";
     private boolean editMode = false;
 
     private Post post;
@@ -63,12 +66,24 @@ public class CreateEditActivity extends AppCompatActivity {
         inputBody = findViewById(R.id.inputBody);
         pbLoading = findViewById(R.id.pbLoading);
         btnSave = findViewById(R.id.btnSave);
+        ivBack = findViewById(R.id.ivBack);
 
         handleIntent();
 
         pickImageFromGallery();
 
         saveListener();
+
+        backListener();
+    }
+
+    private void backListener() {
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                backToPreviousScreen(false);
+            }
+        });
     }
 
     private void handleIntent() {
@@ -140,7 +155,7 @@ public class CreateEditActivity extends AppCompatActivity {
                 hideLoading();
                 if (response.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    finish();
+                    backToPreviousScreen(true);
                 } else {
                     Toast.makeText(getApplicationContext(), "Failed send data", Toast.LENGTH_SHORT).show();
                 }
@@ -169,7 +184,7 @@ public class CreateEditActivity extends AppCompatActivity {
                 hideLoading();
                 if (response.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    finish();
+                    backToPreviousScreen(true);
                 } else {
                     Toast.makeText(getApplicationContext(), "Failed send data", Toast.LENGTH_SHORT).show();
                 }
@@ -181,6 +196,15 @@ public class CreateEditActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void backToPreviousScreen(boolean success) {
+        if (success){
+            Intent intent = new Intent();
+            intent.putExtra(RESULT_CREATE_UPDATE_SUCCESS_KEY, true);
+            setResult(Activity.RESULT_OK, intent);
+        }
+        finish();
     }
 
     private void showLoading() {

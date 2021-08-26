@@ -1,5 +1,6 @@
 package com.anggit97.kmmiblog.ui.news;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,7 +39,7 @@ public class NewsFragment extends Fragment implements NewsAdapterActionListener 
     private FloatingActionButton fabCreate;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public static int REQUEST_CODE_UPDATE = 200;
+    public static int REQUEST_CODE_CREATE_UPDATE_SUCCESS = 200;
 
     public static NewsFragment newInstance() {
         return new NewsFragment();
@@ -78,7 +79,7 @@ public class NewsFragment extends Fragment implements NewsAdapterActionListener 
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), CreateEditActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_CREATE_UPDATE_SUCCESS);
             }
         });
     }
@@ -121,13 +122,13 @@ public class NewsFragment extends Fragment implements NewsAdapterActionListener 
     public void onClickEdit(Post post) {
         Intent intent = new Intent(getActivity(), CreateEditActivity.class);
         intent.putExtra(CreateEditActivity.POST_KEY, post);
-        startActivityForResult(intent, REQUEST_CODE_UPDATE);
+        startActivityForResult(intent, REQUEST_CODE_CREATE_UPDATE_SUCCESS);
     }
 
     private void showPopupDelete(Post post, int absoluteAdapterPosition) {
         new MaterialAlertDialogBuilder(getContext())
                 .setTitle("Delete Post")
-                .setMessage("Are you sure to delete post \""+post.getTitle()+"\"?")
+                .setMessage("Are you sure to delete post \"" + post.getTitle() + "\"?")
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -146,15 +147,15 @@ public class NewsFragment extends Fragment implements NewsAdapterActionListener 
 
     private void deletePostFromServer(Post post, int absoluteAdapterPosition) {
         pbLoading.setVisibility(View.VISIBLE);
-        BlogClient client =  BlogServiceGenerator.createService(BlogClient.class);
+        BlogClient client = BlogServiceGenerator.createService(BlogClient.class);
         client.deletePost(String.valueOf(post.getId())).enqueue(new Callback<DeletePostResponse>() {
             @Override
             public void onResponse(Call<DeletePostResponse> call, Response<DeletePostResponse> response) {
                 pbLoading.setVisibility(View.GONE);
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     adapter.removePost(post, absoluteAdapterPosition);
                     Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Toast.makeText(getContext(), "Delete post is failed", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -165,5 +166,18 @@ public class NewsFragment extends Fragment implements NewsAdapterActionListener 
                 Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_CREATE_UPDATE_SUCCESS && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                boolean success = data.getBooleanExtra(CreateEditActivity.RESULT_CREATE_UPDATE_SUCCESS_KEY, false);
+                if (success) {
+                    fetchData();
+                }
+            }
+        }
     }
 }
