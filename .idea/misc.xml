@@ -16,6 +16,7 @@
         <entry key="app/src/main/res/layout/item_my_news.xml" value="0.2610512595999387" />
         <entry key="app/src/main/res/layout/item_news.xml" value="0.33" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.203125" />
+        <entry key="app/src/main/res/menu/my_news_list_menu.xml" value="0.2564814814814815" />
       </map>
     </option>
   </component>

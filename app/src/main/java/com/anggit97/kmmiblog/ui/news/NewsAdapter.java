@@ -1,17 +1,22 @@
 package com.anggit97.kmmiblog.ui.news;
 
+import android.content.Intent;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anggit97.kmmiblog.R;
 import com.anggit97.kmmiblog.api.BlogServiceGenerator;
 import com.anggit97.kmmiblog.api.model.Post;
+import com.anggit97.kmmiblog.ui.createedit.CreateEditActivity;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -37,6 +42,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.PostViewHolder
         private final TextView tvTitle = itemView.findViewById(R.id.tvTitle);
         private final TextView tvBody = itemView.findViewById(R.id.tvBody);
         private final TextView tvDate = itemView.findViewById(R.id.tvDateNews);
+        private final ImageView ivManage = itemView.findViewById(R.id.ivManage);
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -49,6 +55,36 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.PostViewHolder
             Glide.with(itemView.getContext())
                     .load(post.getThumbnailUrl().replace("localhost", BlogServiceGenerator.IP))
                     .into(ivThumbnail);
+
+            ivManage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu popupMenu = new PopupMenu(ivManage.getContext(), ivManage);
+
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch(item.getItemId()){
+                                case R.id.action_edit:
+                                    Intent intent = new Intent(itemView.getContext(), CreateEditActivity.class);
+                                    itemView.getContext().startActivity(intent);
+                                    return true;
+                                case R.id.action_delete:
+                                    //TODO::SHOW POPUP TO DELETE
+                                    return true;
+                                default:
+                                    return false;
+                            }
+                        }
+                    });
+
+                    //inflate your menu
+                    popupMenu.inflate(R.menu.my_news_list_menu);
+                    popupMenu.setGravity(Gravity.RIGHT);
+
+                    popupMenu.show();
+                }
+            });
         }
     }
 

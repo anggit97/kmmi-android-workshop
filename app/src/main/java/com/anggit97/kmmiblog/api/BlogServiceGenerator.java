@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class BlogServiceGenerator {
 
-    public static final String IP = "192.168.89.64";
+    public static final String IP = "192.168.8.100";
     private static final String PORT = "8888";
     private static final String BASE_URL = "http://" + IP + ":" + PORT + "/blog-api/";
 
