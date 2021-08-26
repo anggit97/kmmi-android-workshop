@@ -1,12 +1,16 @@
 package com.anggit97.kmmiblog.api.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.anggit97.kmmiblog.api.BlogServiceGenerator;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Anggit Prayogo on 20,August,2021
  * GitHub : https://github.com/anggit97
  */
-public class Post {
+public class Post implements Parcelable {
 
     @SerializedName("id")
     private int id;
@@ -65,10 +69,46 @@ public class Post {
     }
 
     public String getThumbnailUrl() {
-        return thumbnailUrl;
+        return thumbnailUrl.replace("localhost", BlogServiceGenerator.IP);
     }
 
     public void setThumbnailUrl(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(title);
+        parcel.writeString(body);
+        parcel.writeString(createdAt);
+        parcel.writeString(updatedAt);
+        parcel.writeString(thumbnailUrl);
+    }
+
+    protected Post(Parcel in){
+        this.id = in.readInt();
+        this.title = in.readString();
+        this.body = in.readString();
+        this.createdAt = in.readString();
+        this.updatedAt = in.readString();
+        this.thumbnailUrl = in.readString();
+    }
+
+    public static final Creator<Post> CREATOR = new Creator<Post>() {
+        @Override
+        public Post createFromParcel(Parcel in) {
+            return new Post(in);
+        }
+
+        @Override
+        public Post[] newArray(int size) {
+            return new Post[size];
+        }
+    };
 }

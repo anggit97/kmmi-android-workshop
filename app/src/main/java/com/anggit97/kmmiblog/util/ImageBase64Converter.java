@@ -29,4 +29,12 @@ public class ImageBase64Converter {
             throw new FileNotFoundException();
         }
     }
+
+    public static String bitmapToBase64(Context context, Bitmap bitmap) {
+        final InputStream imageStream;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] b = baos.toByteArray();
+        return Base64.encodeToString(b, Base64.DEFAULT);
+    }
 }

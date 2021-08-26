@@ -38,6 +38,8 @@ public class NewsFragment extends Fragment implements NewsAdapterActionListener 
     private FloatingActionButton fabCreate;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    public static int REQUEST_CODE_UPDATE = 200;
+
     public static NewsFragment newInstance() {
         return new NewsFragment();
     }
@@ -117,7 +119,9 @@ public class NewsFragment extends Fragment implements NewsAdapterActionListener 
 
     @Override
     public void onClickEdit(Post post) {
-
+        Intent intent = new Intent(getActivity(), CreateEditActivity.class);
+        intent.putExtra(CreateEditActivity.POST_KEY, post);
+        startActivityForResult(intent, REQUEST_CODE_UPDATE);
     }
 
     private void showPopupDelete(Post post, int absoluteAdapterPosition) {
