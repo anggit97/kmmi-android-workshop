@@ -1,5 +1,6 @@
 package com.anggit97.kmmiblog.ui.news;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,15 +19,18 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.anggit97.kmmiblog.R;
 import com.anggit97.kmmiblog.api.BlogClient;
 import com.anggit97.kmmiblog.api.BlogServiceGenerator;
+import com.anggit97.kmmiblog.api.model.DeletePostResponse;
+import com.anggit97.kmmiblog.api.model.Post;
 import com.anggit97.kmmiblog.api.model.PostList;
 import com.anggit97.kmmiblog.ui.createedit.CreateEditActivity;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class NewsFragment extends Fragment {
+public class NewsFragment extends Fragment implements NewsAdapterActionListener {
 
     private NewsAdapter adapter;
     private RecyclerView rvNews;
@@ -100,9 +104,62 @@ public class NewsFragment extends Fragment {
     }
 
     private void initRecyclerview() {
-        adapter = new NewsAdapter();
+        adapter = new NewsAdapter(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvNews.setLayoutManager(linearLayoutManager);
         rvNews.setAdapter(adapter);
+    }
+
+    @Override
+    public void onClickDelete(Post post, int absoluteAdapterPosition) {
+        showPopupDelete(post, absoluteAdapterPosition);
+    }
+
+    @Override
+    public void onClickEdit(Post post) {
+
+    }
+
+    private void showPopupDelete(Post post, int absoluteAdapterPosition) {
+        new MaterialAlertDialogBuilder(getContext())
+                .setTitle("Delete Post")
+                .setMessage("Are you sure to delete post \""+post.getTitle()+"\"?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        deletePostFromServer(post, absoluteAdapterPosition);
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void deletePostFromServer(Post post, int absoluteAdapterPosition) {
+        pbLoading.setVisibility(View.VISIBLE);
+        BlogClient client =  BlogServiceGenerator.createService(BlogClient.class);
+        client.deletePost(String.valueOf(post.getId())).enqueue(new Callback<DeletePostResponse>() {
+            @Override
+            public void onResponse(Call<DeletePostResponse> call, Response<DeletePostResponse> response) {
+                pbLoading.setVisibility(View.GONE);
+                if (response.isSuccessful()){
+                    adapter.removePost(post, absoluteAdapterPosition);
+                    Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getContext(), "Delete post is failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DeletePostResponse> call, Throwable t) {
+                pbLoading.setVisibility(View.GONE);
+                Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
