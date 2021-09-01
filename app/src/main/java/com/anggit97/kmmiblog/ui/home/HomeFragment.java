@@ -4,24 +4,35 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.anggit97.kmmiblog.R;
+import com.anggit97.kmmiblog.api.BlogClient;
+import com.anggit97.kmmiblog.api.BlogServiceGenerator;
 import com.anggit97.kmmiblog.api.model.Post;
+import com.anggit97.kmmiblog.api.model.PostList;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class HomeFragment extends Fragment {
 
     private PostAdapter postAdapter;
-
     private RecyclerView rvPost;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar pbLoading;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -40,6 +51,8 @@ public class HomeFragment extends Fragment {
 
         //initialize view
         rvPost = view.findViewById(R.id.rvNews);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        pbLoading = view.findViewById(R.id.pbLoading);
 
         //Initialize recyclerview and adapter
         postAdapter = new PostAdapter();
@@ -47,19 +60,44 @@ public class HomeFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvPost.setLayoutManager(layoutManager);
 
-        getDummyPost();
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getPost();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        getPost();
     }
 
-    private void getDummyPost() {
-        List<Post> postList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Post post = new Post();
-            post.setId(i);
-            post.setTitle("Judul Post ke "+i);
-            post.setCreatedAt("19 September 2021");
-            post.setThumbnailUrl("https://blog.hacktiv8.com/content/images/size/w2000/2017/02/coding-screen.jpeg");
-            postList.add(post);
-        }
-        postAdapter.setListPost(postList);
+    private void getPost() {
+        showLoading();
+        BlogClient client = BlogServiceGenerator.createService(BlogClient.class);
+        client.getListPost().enqueue(new Callback<PostList>() {
+            @Override
+            public void onResponse(Call<PostList> call, Response<PostList> response) {
+                hideLoading();
+                if (response.isSuccessful()) {
+                    postAdapter.setListPost(response.body().getData());
+                } else {
+                    Toast.makeText(getActivity(), "Fetch Data Failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostList> call, Throwable t) {
+                hideLoading();
+                Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showLoading(){
+        pbLoading.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoading(){
+        pbLoading.setVisibility(View.GONE);
     }
 }

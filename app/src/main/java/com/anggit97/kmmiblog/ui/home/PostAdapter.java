@@ -25,6 +25,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     private final List<Post> listPost = new ArrayList<>();
 
     void setListPost(List<Post> listPost) {
+        this.listPost.clear();
         this.listPost.addAll(listPost);
         this.notifyDataSetChanged();
     }
