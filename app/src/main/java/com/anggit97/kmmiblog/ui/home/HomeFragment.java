@@ -17,11 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.anggit97.kmmiblog.R;
 import com.anggit97.kmmiblog.api.BlogClient;
 import com.anggit97.kmmiblog.api.BlogServiceGenerator;
-import com.anggit97.kmmiblog.api.model.Post;
 import com.anggit97.kmmiblog.api.model.PostList;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;

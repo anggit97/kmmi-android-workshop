@@ -3,16 +3,19 @@
     package="com.anggit97.kmmiblog">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.KMMIBlog">
+        android:theme="@style/Theme.KMMIBlog"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.detail.DetailActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.createedit.CreateEditActivity"
             android:exported="true" />

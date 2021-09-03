@@ -24,6 +24,7 @@ public class Post implements Parcelable {
     private String updatedAt;
     @SerializedName("image_path")
     private String thumbnailUrl;
+    private boolean favorite;
 
     public Post() {
     }
@@ -76,6 +77,14 @@ public class Post implements Parcelable {
         this.thumbnailUrl = thumbnailUrl;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -89,15 +98,17 @@ public class Post implements Parcelable {
         parcel.writeString(createdAt);
         parcel.writeString(updatedAt);
         parcel.writeString(thumbnailUrl);
+        parcel.writeInt(favorite ? 1 : 0);
     }
 
-    protected Post(Parcel in){
+    protected Post(Parcel in) {
         this.id = in.readInt();
         this.title = in.readString();
         this.body = in.readString();
         this.createdAt = in.readString();
         this.updatedAt = in.readString();
         this.thumbnailUrl = in.readString();
+        this.favorite = in.readInt() == 1;
     }
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {
