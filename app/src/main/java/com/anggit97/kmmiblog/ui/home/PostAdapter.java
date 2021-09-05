@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anggit97.kmmiblog.R;
@@ -40,14 +39,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         private final ImageView ivThumbnail;
         private final TextView tvTitle;
         private final TextView tvDate;
-        private ImageView ivFavorite;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
             ivThumbnail = itemView.findViewById(R.id.ivThumbnailNews);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDate = itemView.findViewById(R.id.tvDateNews);
-            ivFavorite = itemView.findViewById(R.id.ivFavorite);
         }
 
         public void bindItem(Post post) {
@@ -57,12 +54,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             Glide.with(itemView.getContext())
                     .load(post.getThumbnailUrl())
                     .into(ivThumbnail);
-
-            if (post.isFavorite()) {
-                ivFavorite.setImageDrawable(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_baseline_favorite_24));
-            } else {
-                ivFavorite.setImageDrawable(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_baseline_favorite_border_24));
-            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
